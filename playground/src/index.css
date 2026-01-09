@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'dawningofanewday-regular';
+  font-style: normal;
+  vertical-align: middle;
+  src: url('https://raw.githubusercontent.com/weberon/fonts-in-weberon/master/all_fonts/DawningofaNewDay-Regular.ttf');
+}
+@font-face {
+  font-family: 'Ludicrous';
+  font-style: normal;
+  vertical-align: middle;
+  src: url('https://raw.githubusercontent.com/weberon/fonts-in-weberon/master/all_fonts/Ludicrous/Ludicrous.ttf');
+}
+@font-face {
+  font-family: 'daniel-regular';
+  font-style: normal;
+  vertical-align: middle;
+  src: url('https://raw.githubusercontent.com/weberon/fonts-in-weberon/master/all_fonts/daniel/daniel.ttf');
+}
+@font-face {
+  font-family: 'daniel-bold';
+  font-style: normal;
+  vertical-align: middle;
+  src: url('https://raw.githubusercontent.com/weberon/fonts-in-weberon/master/all_fonts/daniel/danielbd.ttf');
+}
+@font-face {
+  font-family: 'Grape Nuts';
+  font-style: normal;
+  vertical-align: middle;
+  src: url('https://raw.githubusercontent.com/weberon/fonts-in-weberon/master/all_fonts/Grape_Nuts/GrapeNuts-Regular.ttf');
+}
+
+@font-face {
+  font-family: 'dafontAnsteryScript';
+  font-style: normal;
+  vertical-align: middle;
+  src: url('https://raw.githubusercontent.com/weberon/fonts-in-weberon/master/all_fonts/dafont/AnsteryScript.ttf');
+}
+
+@font-face {
+  font-family: 'vletterBadger';
+  font-style: normal;
+  vertical-align: middle;
+  src: url('https://raw.githubusercontent.com/weberon/fonts-in-weberon/master/all_fonts/vletter/Badger.ttf');
+}
+
+@font-face {
+  font-family: 'dafontAccountantSignature';
+  font-style: normal;
+  vertical-align: middle;
+  src: url('https://raw.githubusercontent.com/weberon/fonts-in-weberon/master/all_fonts/dafont/aAccountantSignature.ttf');
+}
+
+@font-face {
+  font-family: 'dafontAgreementSignature';
+  font-style: normal;
+  vertical-align: middle;
+  src: url('https://raw.githubusercontent.com/weberon/fonts-in-weberon/master/all_fonts/dafont/aAgreementSignature.ttf');
+}
+
+@font-face {
+  font-family: 'dafontApplicantSignature';
+  font-style: normal;
+  vertical-align: middle;
+  src: url('https://raw.githubusercontent.com/weberon/fonts-in-weberon/master/all_fonts/dafont/aApplicantSignature.ttf');
+}
+
+@font-face {
+  font-family: 'biro_script_standard_us';
+  font-style: normal;
+  vertical-align: middle;
+  src: url('https://raw.githubusercontent.com/weberon/fonts-in-weberon/master/all_fonts/biro_script/biro_script_standard_us.woff');
+}
+
+@font-face {
+  font-family: 'biro_script_bold_standard_us';
+  font-style: normal;
+  vertical-align: middle;
+  src: url('https://raw.githubusercontent.com/weberon/fonts-in-weberon/master/all_fonts/biro_script/biro_script_bold_standard_us.woff');
+}
