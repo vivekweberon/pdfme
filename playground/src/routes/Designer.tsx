@@ -14,7 +14,7 @@ import {
   translations,
 } from "../helper";
 import { getPlugins } from "../plugins";
-import { FileText, PenTool, LogOut } from "lucide-react";
+import { FileText, PenTool, Trash2, Download, RefreshCcw, FilePlus } from "lucide-react";
 
 function DesignerApp() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -175,6 +175,26 @@ function DesignerApp() {
     }
   };
 
+  const onAddPage = () => {
+    if (!designer.current) return;
+    const template = cloneDeep(designer.current.getTemplate());
+    template.schemas.push([]);
+    designer.current.updateTemplate(template);
+    toast.success("Page added");
+  };
+
+  const onRemovePage = () => {
+    if (!designer.current) return;
+    const template = cloneDeep(designer.current.getTemplate());
+    if (template.schemas.length <= 1) {
+      toast.error("Cannot remove the last page");
+      return;
+    }
+    template.schemas.pop();
+    designer.current.updateTemplate(template);
+    toast.success("Page removed");
+  };
+
   useEffect(() => {
     if (designerRef.current) buildDesigner();
     return () => designer.current?.destroy();
@@ -194,7 +214,27 @@ function DesignerApp() {
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
+          {/* Page Management */}
+          <div className="flex items-center gap-1 bg-slate-100/50 border border-slate-200 rounded-xl p-1">
+            <button
+              onClick={onAddPage}
+              className="p-1.5 hover:bg-white hover:text-indigo-600 rounded-lg transition-all text-slate-500"
+              title="Add Page"
+            >
+              <FilePlus size={16} />
+            </button>
+            <button
+              onClick={onRemovePage}
+              className="p-1.5 hover:bg-white hover:text-rose-600 rounded-lg transition-all text-slate-500"
+              title="Remove Last Page"
+            >
+              <Trash2 size={16} />
+            </button>
+          </div>
+
+          <div className="h-6 w-px bg-slate-200 mx-1" />
+
           <div className="flex items-center gap-3 px-4 py-1.5 bg-slate-100/50 border border-slate-200 rounded-2xl">
             <div className="flex flex-col">
               <span className="text-[8px] font-black text-slate-400 uppercase tracking-tighter leading-none mb-1">Dimensions</span>
@@ -228,7 +268,8 @@ function DesignerApp() {
 
           <div className="h-8 w-px bg-slate-200 mx-1" />
 
-          <div className="flex items-center gap-2">
+          {/* Layer & Base PDF */}
+          <div className="flex items-center gap-1">
             <div className="relative group">
               <input
                 type="file"
@@ -236,22 +277,55 @@ function DesignerApp() {
                 onChange={onChangeBasePDF}
                 className="absolute inset-0 opacity-0 cursor-pointer z-10"
               />
-              <button className="p-2 hover:bg-slate-100 rounded-lg transition-colors text-slate-500 hover:text-traqr-blue" title="Change Base PDF">
+              <button className="p-2 hover:bg-slate-100 rounded-lg transition-colors text-slate-500 hover:text-indigo-600" title="Change Base PDF">
                 <FileText size={18} />
               </button>
             </div>
             <button
               onClick={toggleEditingStaticSchemas}
-              className={`p-2 rounded-lg transition-colors ${editingStaticSchemas ? 'bg-rose-50 text-rose-600' : 'text-slate-500 hover:text-traqr-blue hover:bg-slate-100'}`}
+              className={`p-2 rounded-lg transition-colors ${editingStaticSchemas ? 'bg-rose-50 text-rose-600' : 'text-slate-500 hover:text-indigo-600 hover:bg-slate-100'}`}
               title={editingStaticSchemas ? "Exit Layer Mode" : "Edit Static Layer"}
             >
               <PenTool size={18} />
             </button>
           </div>
 
+          <div className="h-8 w-px bg-slate-200 mx-1" />
+
+          {/* Project Actions */}
+          <div className="flex items-center gap-2">
+            <div className="relative group">
+              <input
+                type="file"
+                accept="application/json"
+                onChange={(e) => handleLoadTemplate(e, designer.current)}
+                className="absolute inset-0 opacity-0 cursor-pointer z-10"
+              />
+              <button className="p-2 hover:bg-slate-100 rounded-lg transition-colors text-slate-500 hover:text-indigo-600" title="Import JSON">
+                <Download size={18} className="rotate-180" />
+              </button>
+            </div>
+            <button
+              onClick={onResetTemplate}
+              className="p-2 hover:bg-rose-50 rounded-lg transition-colors text-slate-500 hover:text-rose-600"
+              title="Wipe Canvas"
+            >
+              <RefreshCcw size={18} />
+            </button>
+            <button
+              onClick={onDownloadTemplate}
+              className="p-2 hover:bg-indigo-50 rounded-lg transition-colors text-slate-500 hover:text-indigo-600"
+              title="Download JSON Template"
+            >
+              <Download size={18} />
+            </button>
+          </div>
+
+          <div className="h-8 w-px bg-slate-200 mx-1" />
+
           <button
             onClick={() => onSaveTemplate()}
-            className="btn-premium px-5 py-2 text-xs bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 shadow-sm transition-all"
+            className="btn-premium px-5 py-2 text-xs bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 shadow-sm transition-all flex items-center gap-2"
           >
             Sync to Cache
           </button>
@@ -264,40 +338,6 @@ function DesignerApp() {
             ref={designerRef}
             className="w-full h-full rounded-2xl overflow-hidden shadow-premium border border-white"
           />
-        </div>
-
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 w-fit glass rounded-2xl shadow-premium border border-white/50 px-8 py-4 flex items-center gap-6 z-40">
-          <div className="flex items-center gap-3">
-            <div className="relative group">
-              <input
-                type="file"
-                accept="application/json"
-                onChange={(e) => handleLoadTemplate(e, designer.current)}
-                className="absolute inset-0 opacity-0 cursor-pointer z-10"
-              />
-              <button className="btn-premium px-4 py-2 text-xs font-bold text-slate-600 hover:text-traqr-blue flex items-center gap-2">
-                <LogOut size={16} className="rotate-180" />
-                Import JSON
-              </button>
-            </div>
-            <button
-              onClick={onResetTemplate}
-              className="btn-premium px-4 py-2 text-xs font-bold text-slate-500 hover:text-rose-600 flex items-center gap-2"
-            >
-              <LogOut size={16} />
-              Wipe Canvas
-            </button>
-          </div>
-
-          <div className="h-6 w-px bg-slate-200" />
-
-          <button
-            onClick={onDownloadTemplate}
-            className="btn-premium btn-primary px-8 py-2.5 text-sm rounded-xl flex items-center gap-2.5"
-          >
-            <FileText size={18} />
-            Finalize & Download JSON
-          </button>
         </div>
       </div>
     </div>

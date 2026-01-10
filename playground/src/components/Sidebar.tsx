@@ -18,13 +18,13 @@ export default function Sidebar() {
     return (
         <aside className="w-64 h-full bg-slate-900 flex flex-col border-r border-slate-800 flex-shrink-0 z-50">
             {/* Logo Area */}
-            <div className="p-8 flex items-center gap-3">
-                <div className="w-10 h-10 bg-rose-600 rounded-xl flex items-center justify-center shadow-lg shadow-rose-900/20 active:scale-95 transition-transform">
-                    <img src="/imgs/traqr_logo.png" alt="T" className="w-6 h-6 object-contain invert" />
-                </div>
-                <div className="flex flex-col">
-                    <span className="text-white font-bold tracking-tight text-lg leading-tight font-heading">TraQR Pro</span>
-                    <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Elite Edition</span>
+            <div className="p-8 flex flex-col items-center">
+                <div className="w-full h-20 flex items-center justify-center p-2">
+                    <img
+                        src="/imgs/traqr_logo.png"
+                        alt="TraQR Pro"
+                        className="h-full w-auto object-contain"
+                    />
                 </div>
             </div>
 

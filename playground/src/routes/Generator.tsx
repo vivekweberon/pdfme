@@ -6,9 +6,7 @@ import {
   getFontsData,
   getTemplateById,
   getBlankTemplate,
-  generateBulkFromInputs,
   generateBulkFromFiles,
-  readFile,
 } from "../helper";
 import { getPlugins } from '../plugins';
 import {
@@ -190,6 +188,7 @@ function GeneratorApp() {
                       setLastBatchResult({
                         count: result.count || 0,
                         totalTime: result.totalTime || 0,
+                        msPerRecord: result.msPerRecord || 0,
                         records: result.records || []
                       });
                     }
@@ -240,7 +239,7 @@ function GeneratorApp() {
                       </div>
                       <div className="px-5 py-3 bg-white/50 border border-white rounded-2xl shadow-sm min-w-[140px]">
                         <div className="text-[9px] font-black text-slate-400 uppercase mb-1">Execution Velocity</div>
-                        <div className="text-2xl font-black text-emerald-600 leading-none">{lastBatchResult?.totalTime ? `${lastBatchResult.totalTime}ms` : '0ms'}</div>
+                        <div className="text-2xl font-black text-emerald-600 leading-none">{lastBatchResult?.totalTime ? `${(lastBatchResult.totalTime / 1000).toFixed(2)}s` : '0s'}</div>
                         {lastBatchResult?.msPerRecord && <div className="text-[10px] font-bold text-emerald-500 mt-1">{lastBatchResult.msPerRecord}ms / asset</div>}
                       </div>
                     </div>

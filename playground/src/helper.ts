@@ -268,7 +268,7 @@ export const generateBulkFromInputs = async (
 
     toast.info(
       `Velocity Report:
-• Total Batch Time: ${totalTime}ms
+• Total Batch Time: ${(totalTime / 1000).toFixed(2)}s
 • Average Latency: ${msPerRecord}ms/record`,
       { autoClose: 8000, position: 'bottom-right' }
     );
@@ -408,7 +408,7 @@ export const getPaperSizes = () => ({
 
 export const getBlankTemplate = (width = 210, height = 297) =>
 ({
-  schemas: [{}],
+  schemas: [[]],
   basePdf: {
     width,
     height,
