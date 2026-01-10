@@ -227,15 +227,135 @@ export const parseCsv = (csvText: string) => {
   return records;
 };
 
+export const generateBulkFromInputs = async (
+  currentRef: Designer | Form | Viewer | null,
+  allInputs: any[],
+  template?: Template
+) => {
+  if (!currentRef && !template) return;
+  const targetTemplate = template || currentRef?.getTemplate();
+  if (!targetTemplate) return;
+
+  const loadingToastId = toast.loading(`Production in progress: ${allInputs.length} records...`, {
+    position: 'top-center',
+    className: 'font-bold text-slate-800 rounded-xl shadow-premium border border-slate-100',
+  });
+
+  try {
+    const generationStart = performance.now();
+
+    // Perform bulk generation in a single pass
+    const pdf = await generate({
+      template: targetTemplate,
+      inputs: allInputs,
+      options: {
+        font: getFontsData(),
+        lang: currentRef?.getOptions().lang || 'en',
+        title: 'TraQR_Bulk_Export',
+      },
+      plugins: getPlugins(),
+    });
+
+    const totalTime = Math.round(performance.now() - generationStart);
+    const msPerRecord = Math.round(totalTime / allInputs.length);
+
+    toast.update(loadingToastId, {
+      render: `Production Complete: ${allInputs.length} Assets`,
+      type: 'success',
+      isLoading: false,
+      autoClose: 3000,
+    });
+
+    toast.info(
+      `Velocity Report:
+• Total Batch Time: ${totalTime}ms
+• Average Latency: ${msPerRecord}ms/record`,
+      { autoClose: 8000, position: 'bottom-right' }
+    );
+
+    const blob = new Blob([pdf.buffer], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `bulk_${new Date().getTime()}.pdf`;
+    link.click();
+    URL.revokeObjectURL(url);
+
+    return { totalTime, msPerRecord, count: allInputs.length };
+  } catch (e) {
+    toast.dismiss(loadingToastId);
+    alert(`Batch Error: ${e}`);
+    throw e;
+  }
+};
+
+export const generateBulkFromFiles = async (
+  currentRef: Designer | Form | Viewer | null,
+  templateFile: File,
+  csvFile: File
+) => {
+  try {
+    const templateStr = (await readFile(templateFile, 'text')) as string;
+    const template = JSON.parse(templateStr) as Template;
+    checkTemplate(template);
+
+    const csvText = (await readFile(csvFile, 'text')) as string;
+    const records = parseCsv(csvText);
+
+    const allInputs = records.map((record) => {
+      const input: any = {};
+      template.schemas.forEach((page) => {
+        Object.entries(page).forEach(([key, schema]) => {
+          const schemaName = schema.name || key;
+          const type = (schema.type || '').toLowerCase();
+          const isMultiVariable = type === 'multivariabletext' || type === 'multi-variable text';
+          const isQR = type === 'qrcode' || type === 'qr' || type.includes('qrcode') || type.includes('qr');
+
+          if (isMultiVariable && (schema as any).variables) {
+            const variableMap: any = {};
+            (schema as any).variables.forEach((variable: string) => {
+              const val = record[variable] !== undefined ? record[variable] :
+                Object.entries(record).find(([k]) => k.toLowerCase() === variable.toLowerCase())?.[1];
+              variableMap[variable] = (val !== undefined && val.trim() !== '') ? val : ' ';
+            });
+            input[schemaName] = JSON.stringify(variableMap);
+          } else {
+            let recordValue = record[schemaName] !== undefined ? record[schemaName] :
+              Object.entries(record).find(([k]) => k.toLowerCase() === schemaName.toLowerCase())?.[1];
+
+            if (isQR && recordValue === undefined) {
+              recordValue = record['qrcode'] || record['qr'] ||
+                Object.entries(record).find(([k]) => k.toLowerCase() === 'qrcode' || k.toLowerCase() === 'qr')?.[1];
+            }
+
+            input[schemaName] = recordValue !== undefined ? recordValue : (schema.content || '');
+          }
+        });
+      });
+      return input;
+    });
+
+    // Create a temporary ref-like structure or just pass null if we don't need options. 
+    // Actually generateBulkFromInputs uses currentRef.getOptions().lang and currentRef.getTemplate().
+    // We should provide a way to pass these or use defaults.
+    // Let's modify generateBulkFromInputs to take template and options optionally or just use what we have.
+
+    // Pass the custom template to the generator to ensure schema matching
+    const stats = await generateBulkFromInputs(currentRef, allInputs, template);
+    return { ...stats, records: allInputs };
+  } catch (e) {
+    alert(`Generation Failed: ${e}`);
+    throw e;
+  }
+};
+
 export const generateBulkPDF = async (currentRef: Designer | Form | Viewer | null, csvFile: File) => {
   if (!currentRef) return;
   const template = currentRef.getTemplate();
   const csvText = (await readFile(csvFile, 'text')) as string;
   const records = parseCsv(csvText);
 
-  console.log('Parsed CSV records:', records);
-
-  const allInputs = records.map((record, index) => {
+  const allInputs = records.map((record) => {
     const input: any = {};
     template.schemas.forEach((page) => {
       Object.entries(page).forEach(([key, schema]) => {
@@ -253,11 +373,9 @@ export const generateBulkPDF = async (currentRef: Designer | Form | Viewer | nul
           });
           input[schemaName] = JSON.stringify(variableMap);
         } else {
-          // Check for exact match or case-insensitive match for convenience
           let recordValue = record[schemaName] !== undefined ? record[schemaName] :
             Object.entries(record).find(([k]) => k.toLowerCase() === schemaName.toLowerCase())?.[1];
 
-          // Special fallback for QR codes if no direct match found
           if (isQR && recordValue === undefined) {
             recordValue = record['qrcode'] || record['qr'] ||
               Object.entries(record).find(([k]) => k.toLowerCase() === 'qrcode' || k.toLowerCase() === 'qr')?.[1];
@@ -267,57 +385,10 @@ export const generateBulkPDF = async (currentRef: Designer | Form | Viewer | nul
         }
       });
     });
-    console.log(`Generated input for record ${index + 1}:`, input);
     return input;
   });
 
-  try {
-    const totalStart = performance.now();
-    let firstPdfTime = 0;
-
-    // To measure the first PDF time accurately, we should generate one separately if inputs.length > 0
-    if (allInputs.length > 0) {
-      const firstStart = performance.now();
-      await generate({
-        template,
-        inputs: [allInputs[0]],
-        options: { font: getFontsData() },
-        plugins: getPlugins(),
-      });
-      firstPdfTime = Math.round(performance.now() - firstStart);
-    }
-
-    const pdf = await generate({
-      template,
-      inputs: allInputs,
-      options: {
-        font: getFontsData(),
-        lang: currentRef.getOptions().lang,
-        title: 'pdfme-bulk',
-      },
-      plugins: getPlugins(),
-    });
-
-    const totalTime = Math.round(performance.now() - totalStart);
-
-    toast.info(
-      `Bulk Generation Complete!
-- First PDF: ${firstPdfTime}ms
-- Total (${allInputs.length} records): ${totalTime}ms`,
-      { autoClose: 10000 }
-    );
-
-    const blob = new Blob([pdf.buffer], { type: 'application/pdf' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `bulk_${new Date().getTime()}.pdf`;
-    link.click();
-    URL.revokeObjectURL(url);
-  } catch (e) {
-    alert(e + '\n\nCheck the console for full stack trace');
-    throw e;
-  }
+  await generateBulkFromInputs(currentRef, allInputs);
 };
 
 export const getPaperSizes = () => ({

@@ -10,16 +10,11 @@ import {
   getPaperSizes,
   readFile,
   handleLoadTemplate,
-  generatePDF,
-  generateBulkPDF,
   downloadJsonFile,
   translations,
 } from "../helper";
 import { getPlugins } from "../plugins";
-import { NavBar, NavItem } from "../components/NavBar";
-import ExternalButton from "../components/ExternalButton";
-
-
+import { FileText, PenTool, LogOut } from "lucide-react";
 
 function DesignerApp() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -85,10 +80,6 @@ function DesignerApp() {
       console.error(error);
     }
   }, [searchParams, setSearchParams]);
-
-  /* =======================
-     Handlers
-     ======================= */
 
   const onChangeBasePDF = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files?.[0] || !designer.current) return;
@@ -189,153 +180,127 @@ function DesignerApp() {
     return () => designer.current?.destroy();
   }, [buildDesigner]);
 
-  /* =======================
-     NavBar Items
-     ======================= */
-
-
-
-  const navItems: NavItem[] = [
-    {
-      label: "Paper Size",
-      content: (
-        <select
-          value={paperSize}
-          disabled={editingStaticSchemas}
-          className="w-full border rounded px-2 py-1"
-          onChange={(e) => {
-            setPaperSize(e.target.value);
-            onChangePaperSize(e);
-          }}
-        >
-          {Object.entries(getPaperSizes()).map(([key, size]) => (
-            <option key={key} value={key}>
-              {key} ({size.width}×{size.height})
-            </option>
-          ))}
-        </select>
-      ),
-    },
-    {
-      label: "Lang",
-      content: (
-        <select
-          className="w-full border rounded px-2 py-1"
-          onChange={(e) =>
-            designer.current?.updateOptions({ lang: e.target.value as Lang })
-          }
-        >
-          {translations.map((t) => (
-            <option key={t.value} value={t.value}>
-              {t.label}
-            </option>
-          ))}
-        </select>
-      ),
-    },
-    {
-      label: "Change BasePDF",
-      content: (
-        <input type="file" accept="application/pdf" onChange={onChangeBasePDF} />
-      ),
-    },
-    {
-      label: "Structure",
-      content: (
-        <button
-          onClick={toggleEditingStaticSchemas}
-          className={`px-4 py-1.5 text-xs font-bold rounded-lg transition-all shadow-sm active:scale-95 ${editingStaticSchemas ? 'bg-amber-100 text-amber-700 border border-amber-200' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'}`}
-        >
-          {editingStaticSchemas ? "Stop Editing Static" : "Edit Background"}
-        </button>
-      ),
-    },
-    {
-      label: "Open Template",
-      content: (
-        <input
-          type="file"
-          accept="application/json"
-          onChange={(e) => handleLoadTemplate(e, designer.current)}
-          className="w-full text-sm border-slate-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg transition-all"
-        />
-      ),
-    },
-    {
-      label: "Bulk Create (CSV)",
-      content: (
-        <input
-          type="file"
-          accept="text/csv"
-          onChange={(e) => {
-            if (e.target.files && e.target.files[0]) {
-              generateBulkPDF(designer.current, e.target.files[0]);
-            }
-          }}
-          className="w-full text-sm border-slate-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg transition-all"
-        />
-      ),
-    },
-    {
-      label: "History",
-      content: (
-        <div className="flex gap-2">
-          <button
-            onClick={() => onSaveTemplate()}
-            className="px-3 py-1.5 text-xs font-bold bg-white border border-slate-200 text-slate-700 rounded-lg hover:bg-slate-50 transition-all shadow-sm active:scale-95"
-          >
-            Save
-          </button>
-          <button
-            onClick={onResetTemplate}
-            className="px-3 py-1.5 text-xs font-bold bg-white border border-slate-200 text-slate-700 rounded-lg hover:bg-slate-50 transition-all shadow-sm active:scale-95"
-          >
-            Reset
-          </button>
-        </div>
-      ),
-    },
-    {
-      label: "Actions",
-      content: (
-        <div className="flex gap-2">
-          <button
-            onClick={onDownloadTemplate}
-            className="px-4 py-1.5 text-xs font-bold bg-white border border-slate-200 text-slate-700 rounded-lg hover:bg-slate-50 transition-all shadow-sm active:scale-95 flex items-center gap-1.5"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-3.5 h-3.5">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
-            </svg>
-            Download Template
-          </button>
-          <button
-            onClick={() => generatePDF(designer.current)}
-            className="px-4 py-1.5 text-xs font-bold bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all shadow-md shadow-indigo-100 active:scale-95 flex items-center gap-1.5"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-3.5 h-3.5">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m.75 12 3 3m0 0 3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
-            </svg>
-            Generate PDF
-          </button>
-        </div>
-      ),
-    },
-    {
-      label: "",
-      content: (
-        <ExternalButton
-          href="https://github.com/pdfme/pdfme/issues/new"
-          title="Feedback this template"
-        />
-      ),
-    },
-  ];
 
   return (
-    <>
-      <NavBar items={navItems} />
-      <div ref={designerRef} className="flex-1 w-full" />
-    </>
+    <div className="flex-1 flex flex-col overflow-hidden bg-slate-50 relative">
+      <header className="h-16 flex-shrink-0 flex items-center justify-between px-8 border-b border-slate-200 bg-white/80 backdrop-blur-md sticky top-0 z-40">
+        <div className="flex items-center gap-4">
+          <div className="p-2 bg-indigo-50 rounded-lg">
+            <PenTool size={18} className="text-indigo-600" />
+          </div>
+          <div className="flex flex-col">
+            <h1 className="text-sm font-bold text-slate-800 font-heading leading-tight">Elite Realtor Template</h1>
+            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Workspace / Designer</span>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 px-4 py-1.5 bg-slate-100/50 border border-slate-200 rounded-2xl">
+            <div className="flex flex-col">
+              <span className="text-[8px] font-black text-slate-400 uppercase tracking-tighter leading-none mb-1">Dimensions</span>
+              <select
+                value={paperSize}
+                disabled={editingStaticSchemas}
+                className="bg-transparent text-[11px] font-bold text-slate-600 outline-none cursor-pointer"
+                onChange={(e) => {
+                  setPaperSize(e.target.value);
+                  onChangePaperSize(e);
+                }}
+              >
+                {Object.entries(getPaperSizes()).map(([key]) => (
+                  <option key={key} value={key}>{key}</option>
+                ))}
+              </select>
+            </div>
+            <div className="h-6 w-px bg-slate-200 mx-1" />
+            <div className="flex flex-col">
+              <span className="text-[8px] font-black text-slate-400 uppercase tracking-tighter leading-none mb-1">Language</span>
+              <select
+                className="bg-transparent text-[11px] font-bold text-slate-600 outline-none cursor-pointer"
+                onChange={(e) => designer.current?.updateOptions({ lang: e.target.value as Lang })}
+              >
+                {translations.map((t) => (
+                  <option key={t.value} value={t.value}>{t.label}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="h-8 w-px bg-slate-200 mx-1" />
+
+          <div className="flex items-center gap-2">
+            <div className="relative group">
+              <input
+                type="file"
+                accept="application/pdf"
+                onChange={onChangeBasePDF}
+                className="absolute inset-0 opacity-0 cursor-pointer z-10"
+              />
+              <button className="p-2 hover:bg-slate-100 rounded-lg transition-colors text-slate-500 hover:text-traqr-blue" title="Change Base PDF">
+                <FileText size={18} />
+              </button>
+            </div>
+            <button
+              onClick={toggleEditingStaticSchemas}
+              className={`p-2 rounded-lg transition-colors ${editingStaticSchemas ? 'bg-rose-50 text-rose-600' : 'text-slate-500 hover:text-traqr-blue hover:bg-slate-100'}`}
+              title={editingStaticSchemas ? "Exit Layer Mode" : "Edit Static Layer"}
+            >
+              <PenTool size={18} />
+            </button>
+          </div>
+
+          <button
+            onClick={() => onSaveTemplate()}
+            className="btn-premium px-5 py-2 text-xs bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 shadow-sm transition-all"
+          >
+            Sync to Cache
+          </button>
+        </div>
+      </header>
+
+      <div className="flex-1 flex overflow-hidden relative">
+        <div className="flex-1 overflow-hidden p-6 bg-slate-100/50">
+          <div
+            ref={designerRef}
+            className="w-full h-full rounded-2xl overflow-hidden shadow-premium border border-white"
+          />
+        </div>
+
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 w-fit glass rounded-2xl shadow-premium border border-white/50 px-8 py-4 flex items-center gap-6 z-40">
+          <div className="flex items-center gap-3">
+            <div className="relative group">
+              <input
+                type="file"
+                accept="application/json"
+                onChange={(e) => handleLoadTemplate(e, designer.current)}
+                className="absolute inset-0 opacity-0 cursor-pointer z-10"
+              />
+              <button className="btn-premium px-4 py-2 text-xs font-bold text-slate-600 hover:text-traqr-blue flex items-center gap-2">
+                <LogOut size={16} className="rotate-180" />
+                Import JSON
+              </button>
+            </div>
+            <button
+              onClick={onResetTemplate}
+              className="btn-premium px-4 py-2 text-xs font-bold text-slate-500 hover:text-rose-600 flex items-center gap-2"
+            >
+              <LogOut size={16} />
+              Wipe Canvas
+            </button>
+          </div>
+
+          <div className="h-6 w-px bg-slate-200" />
+
+          <button
+            onClick={onDownloadTemplate}
+            className="btn-premium btn-primary px-8 py-2.5 text-sm rounded-xl flex items-center gap-2.5"
+          >
+            <FileText size={18} />
+            Finalize & Download JSON
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 

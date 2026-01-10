@@ -12,16 +12,16 @@ type NavBarProps = {
 
 export function NavBar({ items }: NavBarProps) {
   return (
-    <Disclosure as="nav" className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-sm">
+    <Disclosure as="nav" className="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm flex-shrink-0">
       {({ open }) => (
         <>
           <div className="mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex h-16 items-center justify-between">
-              <div className="flex items-center space-x-8 overflow-x-auto no-scrollbar py-2">
+            <div className="flex h-14 items-center justify-between">
+              <div className="flex items-center space-x-6 overflow-x-auto no-scrollbar py-1">
                 {items.map(({ label, content }, index) => (
-                  <div key={label || String(index)} className="flex flex-col min-w-max">
+                  <div key={label || String(index)} className="flex flex-col min-w-max border-r border-slate-100 last:border-0 pr-6 mr-0">
                     {label && (
-                      <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 mb-1 ml-0.5">
+                      <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-0.5">
                         {label}
                       </span>
                     )}
