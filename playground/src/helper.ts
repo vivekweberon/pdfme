@@ -1,6 +1,7 @@
 import { Template, Font, checkTemplate, getInputFromTemplate, getDefaultFont } from '@pdfme/common';
 import { Form, Viewer, Designer } from '@pdfme/ui';
 import { generate } from '@pdfme/generator';
+import { toast } from 'react-toastify';
 import { getPlugins } from './plugins';
 
 export function fromKebabCase(str: string): string {
@@ -271,6 +272,21 @@ export const generateBulkPDF = async (currentRef: Designer | Form | Viewer | nul
   });
 
   try {
+    const totalStart = performance.now();
+    let firstPdfTime = 0;
+
+    // To measure the first PDF time accurately, we should generate one separately if inputs.length > 0
+    if (allInputs.length > 0) {
+      const firstStart = performance.now();
+      await generate({
+        template,
+        inputs: [allInputs[0]],
+        options: { font: getFontsData() },
+        plugins: getPlugins(),
+      });
+      firstPdfTime = Math.round(performance.now() - firstStart);
+    }
+
     const pdf = await generate({
       template,
       inputs: allInputs,
@@ -282,11 +298,20 @@ export const generateBulkPDF = async (currentRef: Designer | Form | Viewer | nul
       plugins: getPlugins(),
     });
 
+    const totalTime = Math.round(performance.now() - totalStart);
+
+    toast.info(
+      `Bulk Generation Complete!
+- First PDF: ${firstPdfTime}ms
+- Total (${allInputs.length} records): ${totalTime}ms`,
+      { autoClose: 10000 }
+    );
+
     const blob = new Blob([pdf.buffer], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `bulk_generation_${new Date().getTime()}.pdf`;
+    link.download = `bulk_${new Date().getTime()}.pdf`;
     link.click();
     URL.revokeObjectURL(url);
   } catch (e) {

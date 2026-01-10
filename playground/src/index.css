@@ -2,82 +2,123 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --secondary: #64748b;
+  --background: #f8fafc;
+  --surface: #ffffff;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-premium: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --radius: 0.75rem;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap');
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: var(--background);
+  color: var(--text-main);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+.font-heading {
+  font-family: 'Outfit', sans-serif;
+}
+
+/* Premium UI Utility Classes */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn-premium {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+}
+
+.btn-premium:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+.btn-premium:active {
+  transform: translateY(0.5px);
+  filter: brightness(0.95);
+}
+
+/* Font Face Definitions */
 @font-face {
   font-family: 'dawningofanewday-regular';
-  font-style: normal;
-  vertical-align: middle;
   src: url('https://raw.githubusercontent.com/weberon/fonts-in-weberon/master/all_fonts/DawningofaNewDay-Regular.ttf');
 }
+
 @font-face {
   font-family: 'Ludicrous';
-  font-style: normal;
-  vertical-align: middle;
   src: url('https://raw.githubusercontent.com/weberon/fonts-in-weberon/master/all_fonts/Ludicrous/Ludicrous.ttf');
 }
+
 @font-face {
   font-family: 'daniel-regular';
-  font-style: normal;
-  vertical-align: middle;
   src: url('https://raw.githubusercontent.com/weberon/fonts-in-weberon/master/all_fonts/daniel/daniel.ttf');
 }
+
 @font-face {
   font-family: 'daniel-bold';
-  font-style: normal;
-  vertical-align: middle;
   src: url('https://raw.githubusercontent.com/weberon/fonts-in-weberon/master/all_fonts/daniel/danielbd.ttf');
 }
+
 @font-face {
   font-family: 'Grape Nuts';
-  font-style: normal;
-  vertical-align: middle;
   src: url('https://raw.githubusercontent.com/weberon/fonts-in-weberon/master/all_fonts/Grape_Nuts/GrapeNuts-Regular.ttf');
 }
 
 @font-face {
   font-family: 'dafontAnsteryScript';
-  font-style: normal;
-  vertical-align: middle;
   src: url('https://raw.githubusercontent.com/weberon/fonts-in-weberon/master/all_fonts/dafont/AnsteryScript.ttf');
 }
 
 @font-face {
   font-family: 'vletterBadger';
-  font-style: normal;
-  vertical-align: middle;
   src: url('https://raw.githubusercontent.com/weberon/fonts-in-weberon/master/all_fonts/vletter/Badger.ttf');
 }
 
 @font-face {
   font-family: 'dafontAccountantSignature';
-  font-style: normal;
-  vertical-align: middle;
   src: url('https://raw.githubusercontent.com/weberon/fonts-in-weberon/master/all_fonts/dafont/aAccountantSignature.ttf');
 }
 
 @font-face {
   font-family: 'dafontAgreementSignature';
-  font-style: normal;
-  vertical-align: middle;
   src: url('https://raw.githubusercontent.com/weberon/fonts-in-weberon/master/all_fonts/dafont/aAgreementSignature.ttf');
 }
 
 @font-face {
   font-family: 'dafontApplicantSignature';
-  font-style: normal;
-  vertical-align: middle;
   src: url('https://raw.githubusercontent.com/weberon/fonts-in-weberon/master/all_fonts/dafont/aApplicantSignature.ttf');
 }
 
 @font-face {
   font-family: 'biro_script_standard_us';
-  font-style: normal;
-  vertical-align: middle;
   src: url('https://raw.githubusercontent.com/weberon/fonts-in-weberon/master/all_fonts/biro_script/biro_script_standard_us.woff');
 }
 
 @font-face {
   font-family: 'biro_script_bold_standard_us';
-  font-style: normal;
-  vertical-align: middle;
   src: url('https://raw.githubusercontent.com/weberon/fonts-in-weberon/master/all_fonts/biro_script/biro_script_bold_standard_us.woff');
 }
