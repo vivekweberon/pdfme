@@ -95,13 +95,13 @@ function GeneratorApp() {
   }, [searchParams, setSearchParams]);
 
   useEffect(() => {
-    buildUi(mode);
+    buildUi('form');
     return () => {
       if (ui.current) {
         ui.current.destroy();
       }
     };
-  }, [mode, buildUi]);
+  }, [buildUi]);
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden bg-slate-50 relative">
@@ -113,25 +113,6 @@ function GeneratorApp() {
           <div className="flex flex-col">
             <h1 className="text-sm font-bold text-slate-800 font-heading leading-tight">Document Production Hub</h1>
             <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Workspace / Generator</span>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <div className="flex bg-slate-100 p-1 rounded-xl border border-slate-200 shadow-sm">
-            <button
-              onClick={() => { setMode('form'); buildUi('form'); }}
-              className={`flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${mode === 'form' ? 'bg-white text-traqr-blue shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-            >
-              <PenTool size={14} />
-              Editor Mode
-            </button>
-            <button
-              onClick={() => { setMode('viewer'); buildUi('viewer'); }}
-              className={`flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${mode === 'viewer' ? 'bg-white text-traqr-blue shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-            >
-              <Zap size={14} />
-              Live Preview
-            </button>
           </div>
         </div>
       </header>
