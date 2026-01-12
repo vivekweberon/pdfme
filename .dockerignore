@@ -1,0 +1,13 @@
+node_modules
+.git
+.vscode
+dist
+.DS_Store
+coverage
+.env
+packages/*/dist
+packages/*/node_modules
+playground/node_modules
+playground/dist
+website/node_modules
+website/build
