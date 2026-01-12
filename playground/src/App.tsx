@@ -38,7 +38,7 @@ export default function App() {
       </main>
       <ToastContainer
         position="bottom-right"
-        toastClassName={() => "bg-white shadow-premium rounded-2xl p-4 border border-slate-100 flex items-center min-h-[64px] mb-4 mr-4"}
+        toastClassName={() => "bg-white text-black shadow-premium rounded-2xl p-4 border border-slate-100 flex items-center min-h-[64px] mb-4 mr-4"}
       />
     </div>
   );

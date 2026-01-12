@@ -209,27 +209,29 @@ function DesignerApp() {
             <PenTool size={18} className="text-indigo-600" />
           </div>
           <div className="flex flex-col">
-            <h1 className="text-sm font-bold text-slate-800 font-heading leading-tight">Elite Realtor Template</h1>
-            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Workspace / Designer</span>
+            <h1 className="text-sm font-bold text-slate-800 font-heading leading-tight"></h1>
+            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest"></span>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
-          {/* Page Management */}
-          <div className="flex items-center gap-1 bg-slate-100/50 border border-slate-200 rounded-xl p-1">
+          <div className="flex items-center gap-2 bg-slate-100/50 border border-slate-200 rounded-xl p-1.5">
             <button
               onClick={onAddPage}
-              className="p-1.5 hover:bg-white hover:text-indigo-600 rounded-lg transition-all text-slate-500"
+              className="flex items-center gap-2 px-3 py-1.5 hover:bg-white hover:text-indigo-600 rounded-lg transition-all text-slate-500 text-xs font-bold"
               title="Add Page"
             >
-              <FilePlus size={16} />
+              <FilePlus size={14} />
+              Add Page
             </button>
+            <div className="w-px h-4 bg-slate-200" />
             <button
               onClick={onRemovePage}
-              className="p-1.5 hover:bg-white hover:text-rose-600 rounded-lg transition-all text-slate-500"
+              className="flex items-center gap-2 px-3 py-1.5 hover:bg-white hover:text-rose-600 rounded-lg transition-all text-slate-500 text-xs font-bold"
               title="Remove Last Page"
             >
-              <Trash2 size={16} />
+              <Trash2 size={14} />
+              Delete Page
             </button>
           </div>
 
@@ -268,8 +270,7 @@ function DesignerApp() {
 
           <div className="h-8 w-px bg-slate-200 mx-1" />
 
-          {/* Layer & Base PDF */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-2">
             <div className="relative group">
               <input
                 type="file"
@@ -277,22 +278,23 @@ function DesignerApp() {
                 onChange={onChangeBasePDF}
                 className="absolute inset-0 opacity-0 cursor-pointer z-10"
               />
-              <button className="p-2 hover:bg-slate-100 rounded-lg transition-colors text-slate-500 hover:text-indigo-600" title="Change Base PDF">
-                <FileText size={18} />
+              <button className="flex items-center gap-2 px-3 py-2 hover:bg-slate-100 rounded-lg transition-colors text-slate-500 hover:text-indigo-600 text-xs font-bold">
+                <FileText size={16} />
+                Base PDF
               </button>
             </div>
             <button
               onClick={toggleEditingStaticSchemas}
-              className={`p-2 rounded-lg transition-colors ${editingStaticSchemas ? 'bg-rose-50 text-rose-600' : 'text-slate-500 hover:text-indigo-600 hover:bg-slate-100'}`}
+              className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors text-xs font-bold ${editingStaticSchemas ? 'bg-rose-50 text-rose-600' : 'text-slate-500 hover:text-indigo-600 hover:bg-slate-100'}`}
               title={editingStaticSchemas ? "Exit Layer Mode" : "Edit Static Layer"}
             >
-              <PenTool size={18} />
+              <PenTool size={16} />
+              {editingStaticSchemas ? 'Exit Layer' : 'Edit Layer'}
             </button>
           </div>
 
           <div className="h-8 w-px bg-slate-200 mx-1" />
 
-          {/* Project Actions */}
           <div className="flex items-center gap-2">
             <div className="relative group">
               <input
@@ -301,23 +303,26 @@ function DesignerApp() {
                 onChange={(e) => handleLoadTemplate(e, designer.current)}
                 className="absolute inset-0 opacity-0 cursor-pointer z-10"
               />
-              <button className="p-2 hover:bg-slate-100 rounded-lg transition-colors text-slate-500 hover:text-indigo-600" title="Import JSON">
-                <Download size={18} className="rotate-180" />
+              <button className="flex items-center gap-2 px-3 py-2 hover:bg-slate-100 rounded-lg transition-colors text-slate-500 hover:text-indigo-600 text-xs font-bold">
+                <Download size={16} className="rotate-180" />
+                Import
               </button>
             </div>
             <button
               onClick={onResetTemplate}
-              className="p-2 hover:bg-rose-50 rounded-lg transition-colors text-slate-500 hover:text-rose-600"
+              className="flex items-center gap-2 px-3 py-2 hover:bg-rose-50 rounded-lg transition-colors text-slate-500 hover:text-rose-600 text-xs font-bold"
               title="Wipe Canvas"
             >
-              <RefreshCcw size={18} />
+              <RefreshCcw size={16} />
+              Reset
             </button>
             <button
               onClick={onDownloadTemplate}
-              className="p-2 hover:bg-indigo-50 rounded-lg transition-colors text-slate-500 hover:text-indigo-600"
+              className="flex items-center gap-2 px-3 py-2 hover:bg-indigo-50 rounded-lg transition-colors text-slate-500 hover:text-indigo-600 text-xs font-bold"
               title="Download JSON Template"
             >
-              <Download size={18} />
+              <Download size={16} />
+              Export
             </button>
           </div>
 
