@@ -8,7 +8,6 @@ WORKDIR /app
 COPY . .
 
 # Install dependencies for the monorepo
-# npm ci is faster and improved for CI environments
 RUN npm ci
 
 # Build all packages in the monorepo
@@ -16,9 +15,7 @@ RUN npm run build
 
 # Build the playground application
 WORKDIR /app/playground
-# Install playground specific dependencies
 RUN npm ci
-# Build the playground
 RUN npm run build
 
 # Production Stage
@@ -26,15 +23,17 @@ FROM node:20-slim
 
 WORKDIR /app
 
-# Install 'serve' to serve static assets
-RUN npm install -g serve
+# Copy necessary artifacts from builder
+# We need the root package.json, node_modules (with dependencies), packages (for local references), and the server code.
+COPY --from=builder /app/package.json .
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/packages ./packages
+COPY --from=builder /app/server ./server
+COPY --from=builder /app/playground/dist ./playground/dist
 
-# Copy the built assets from the builder stage
-COPY --from=builder /app/playground/dist .
-
-# Bind to the standard port or the one provided by Render ($PORT)
+# Bind to port
 ENV PORT=3000
 EXPOSE 3000
 
-# Start the static file server
-CMD ["sh", "-c", "serve -s . -l ${PORT}"]
+# Start the Node.js server
+CMD ["node", "server/index.js"]

@@ -1,0 +1,15 @@
+{
+    "name": "pdfme-server",
+    "version": "1.0.0",
+    "description": "API server for PDF generation",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js"
+    },
+    "dependencies": {
+        "express": "^4.18.2",
+        "cors": "^2.8.5",
+        "@pdfme/generator": "file:../packages/generator/dist",
+        "@pdfme/common": "file:../packages/common/dist"
+    }
+}
