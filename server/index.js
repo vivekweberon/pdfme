@@ -2,6 +2,52 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const { generate } = require('@pdfme/generator');
+const {
+    text,
+    multiVariableText,
+    barcodes,
+    image,
+    svg,
+    line,
+    table,
+    rectangle,
+    ellipse,
+    dateTime,
+    date,
+    time,
+    select,
+    checkbox,
+    radioGroup
+} = require('@pdfme/schemas');
+
+const plugins = {
+    Text: text,
+    'Multi-Variable Text': multiVariableText,
+    Table: table,
+    Line: line,
+    Rectangle: rectangle,
+    Ellipse: ellipse,
+    Image: image,
+    SVG: svg,
+    QR: barcodes.qrcode,
+    DateTime: dateTime,
+    Date: date,
+    Time: time,
+    Select: select,
+    Checkbox: checkbox,
+    RadioGroup: radioGroup,
+    // Aliases for compatibility
+    text: text,
+    multiVariableText: multiVariableText,
+    'multi-variable text': multiVariableText,
+    qrcode: barcodes.qrcode,
+    QRCODE: barcodes.qrcode,
+    qr: barcodes.qrcode,
+    image: image,
+    line: line,
+    rectangle: rectangle,
+    ellipse: ellipse,
+};
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -120,7 +166,11 @@ app.post('/api/generate', async (req, res) => {
             });
         }
 
-        const pdf = await generate({ template, inputs });
+        const pdf = await generate({
+            template,
+            inputs,
+            plugins
+        });
 
         // Use Buffer.from for node environment if generate returns Uint8Array
         const pdfBuffer = Buffer.from(pdf.buffer || pdf);
