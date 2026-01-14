@@ -11,69 +11,73 @@ export function fromKebabCase(str: string): string {
     .join(' ');
 }
 
-export const getFontsData = (): Font => ({
-  ...getDefaultFont(),
-  'PinyonScript-Regular': {
-    fallback: false,
-    data: 'https://fonts.gstatic.com/s/pinyonscript/v22/6xKpdSJbL9-e9LuoeQiDRQR8aOLQO4bhiDY.ttf',
-  },
-  NotoSerifJP: {
-    fallback: false,
-    data: 'https://fonts.gstatic.com/s/notoserifjp/v30/xn71YHs72GKoTvER4Gn3b5eMRtWGkp6o7MjQ2bwxOubAILO5wBCU.ttf',
-  },
-  NotoSansJP: {
-    fallback: false,
-    data: 'https://fonts.gstatic.com/s/notosansjp/v53/-F6jfjtqLzI2JPCgQBnw7HFyzSD-AsregP8VFBEj75vY0rw-oME.ttf',
-  },
-  'dawningofanewday-regular': {
-    fallback: false,
-    data: 'https://raw.githubusercontent.com/weberon/fonts-in-weberon/master/all_fonts/DawningofaNewDay-Regular.ttf',
-  },
-  'Ludicrous': {
-    fallback: false,
-    data: 'https://raw.githubusercontent.com/weberon/fonts-in-weberon/master/all_fonts/Ludicrous/Ludicrous.ttf',
-  },
-  'daniel-regular': {
-    fallback: false,
-    data: 'https://raw.githubusercontent.com/weberon/fonts-in-weberon/master/all_fonts/daniel/daniel.ttf',
-  },
-  'daniel-bold': {
-    fallback: false,
-    data: 'https://raw.githubusercontent.com/weberon/fonts-in-weberon/master/all_fonts/daniel/danielbd.ttf',
-  },
-  'Grape Nuts': {
-    fallback: false,
-    data: 'https://raw.githubusercontent.com/weberon/fonts-in-weberon/master/all_fonts/Grape_Nuts/GrapeNuts-Regular.ttf',
-  },
-  'dafontAnsteryScript': {
-    fallback: false,
-    data: 'https://raw.githubusercontent.com/weberon/fonts-in-weberon/master/all_fonts/dafont/AnsteryScript.ttf',
-  },
-  'vletterBadger': {
-    fallback: false,
-    data: 'https://raw.githubusercontent.com/weberon/fonts-in-weberon/master/all_fonts/vletter/Badger.ttf',
-  },
-  'dafontAccountantSignature': {
-    fallback: false,
-    data: 'https://raw.githubusercontent.com/weberon/fonts-in-weberon/master/all_fonts/dafont/aAccountantSignature.ttf',
-  },
-  'dafontAgreementSignature': {
-    fallback: false,
-    data: 'https://raw.githubusercontent.com/weberon/fonts-in-weberon/master/all_fonts/dafont/aAgreementSignature.ttf',
-  },
-  'dafontApplicantSignature': {
-    fallback: false,
-    data: 'https://raw.githubusercontent.com/weberon/fonts-in-weberon/master/all_fonts/dafont/aApplicantSignature.ttf',
-  },
-  'biro_script_standard_us': {
-    fallback: false,
-    data: 'https://raw.githubusercontent.com/weberon/fonts-in-weberon/master/all_fonts/biro_script/biro_script_standard_us.woff',
-  },
-  'biro_script_bold_standard_us': {
-    fallback: false,
-    data: 'https://raw.githubusercontent.com/weberon/fonts-in-weberon/master/all_fonts/biro_script/biro_script_bold_standard_us.woff',
-  },
-});
+export const getFontsData = (): Font => {
+  const origin = typeof window !== 'undefined' ? window.location.origin : '';
+
+  return {
+    ...getDefaultFont(),
+    'PinyonScript-Regular': {
+      fallback: false,
+      data: 'https://fonts.gstatic.com/s/pinyonscript/v22/6xKpdSJbL9-e9LuoeQiDRQR8aOLQO4bhiDY.ttf',
+    },
+    NotoSerifJP: {
+      fallback: false,
+      data: 'https://fonts.gstatic.com/s/notoserifjp/v30/xn71YHs72GKoTvER4Gn3b5eMRtWGkp6o7MjQ2bwxOubAILO5wBCU.ttf',
+    },
+    NotoSansJP: {
+      fallback: false,
+      data: 'https://fonts.gstatic.com/s/notosansjp/v53/-F6jfjtqLzI2JPCgQBnw7HFyzSD-AsregP8VFBEj75vY0rw-oME.ttf',
+    },
+    'dawningofanewday-regular': {
+      fallback: false,
+      data: `${origin}/fonts/DawningofaNewDay-Regular.ttf`,
+    },
+    'Ludicrous': {
+      fallback: false,
+      data: `${origin}/fonts/Ludicrous.ttf`,
+    },
+    'daniel-regular': {
+      fallback: false,
+      data: `${origin}/fonts/daniel.ttf`,
+    },
+    'daniel-bold': {
+      fallback: false,
+      data: `${origin}/fonts/danielbd.ttf`,
+    },
+    'Grape Nuts': {
+      fallback: false,
+      data: `${origin}/fonts/GrapeNuts-Regular.ttf`,
+    },
+    'dafontAnsteryScript': {
+      fallback: false,
+      data: `${origin}/fonts/AnsteryScript.ttf`,
+    },
+    'vletterBadger': {
+      fallback: false,
+      data: `${origin}/fonts/Badger.ttf`,
+    },
+    'dafontAccountantSignature': {
+      fallback: false,
+      data: `${origin}/fonts/aAccountantSignature.ttf`,
+    },
+    'dafontAgreementSignature': {
+      fallback: false,
+      data: `${origin}/fonts/aAgreementSignature.ttf`,
+    },
+    'dafontApplicantSignature': {
+      fallback: false,
+      data: `${origin}/fonts/aApplicantSignature.ttf`,
+    },
+    'biro_script_standard_us': {
+      fallback: false,
+      data: `${origin}/fonts/biro_script_standard_us.woff`,
+    },
+    'biro_script_bold_standard_us': {
+      fallback: false,
+      data: `${origin}/fonts/biro_script_bold_standard_us.woff`,
+    },
+  };
+};
 
 export const readFile = (file: File | null, type: 'text' | 'dataURL' | 'arrayBuffer') => {
   return new Promise<string | ArrayBuffer>((r) => {
